@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>列车监控 TCMS</title>
+  <title>TCMS Train Monitor</title>
   <style>
     :root{--bg:#03080f;--panel:#0b111b;--line:#182235;--cyan:#4dd6ff;--dim:#6f7e9a;--green:#5af58a;--amber:#ffd85a;--red:#ff5a5a}
     html,body{margin:0;height:100%;background:var(--bg);font-family:"Segoe UI","Microsoft YaHei",sans-serif;color:#fff}
@@ -31,17 +31,17 @@
       <div class="car" data-car="1">Tc1</div><div class="car" data-car="2">M1</div><div class="car" data-car="3">M2</div><div class="car" data-car="4">M3</div><div class="car" data-car="5">M4</div><div class="car" data-car="6">Tc2</div>
     </div>
     <div class="tcms-grid">
-      <div class="tcms-cell"><div class="lab">牵引力 %</div><div class="bar"><span id="trBar"></span></div><div class="num"><b id="trPct">0</b>%</div></div>
-      <div class="tcms-cell"><div class="lab">制动力 %</div><div class="bar"><span id="bkBar" class="bk"></span></div><div class="num"><b id="bkPct">0</b>%</div></div>
-      <div class="tcms-cell"><div class="lab">总风缸 MR</div><div class="num"><b id="mrPress">900</b> kPa</div></div>
-      <div class="tcms-cell"><div class="lab">制动缸 BC</div><div class="num"><b id="bcPress">0</b> kPa</div></div>
-      <div class="tcms-cell"><div class="lab">第三轨供电</div><div class="num" id="thirdRailState">集电接通</div></div>
-      <div class="tcms-cell"><div class="lab">网压 DC750 / 直流</div><div class="num"><b id="lineV">750</b> V</div></div>
-      <div class="tcms-cell"><div class="lab">牵引变流器电流（再生为负）</div><div class="num motor-i-wrap neutral" id="motorCurrentWrap"><b id="motorCurrentA">0</b><span> A</span></div></div>
-      <div class="tcms-cell"><div class="lab">车门</div><div class="num" id="doorState">右关</div></div>
-      <div class="tcms-cell"><div class="lab">空调</div><div class="num" id="acState">关</div></div>
+      <div class="tcms-cell"><div class="lab">Traction %</div><div class="bar"><span id="trBar"></span></div><div class="num"><b id="trPct">0</b>%</div></div>
+      <div class="tcms-cell"><div class="lab">Braking %</div><div class="bar"><span id="bkBar" class="bk"></span></div><div class="num"><b id="bkPct">0</b>%</div></div>
+      <div class="tcms-cell"><div class="lab">Main Reservoir MR</div><div class="num"><b id="mrPress">900</b> kPa</div></div>
+      <div class="tcms-cell"><div class="lab">Brake Cylinder BC</div><div class="num"><b id="bcPress">0</b> kPa</div></div>
+      <div class="tcms-cell"><div class="lab">Third Rail Power</div><div class="num" id="thirdRailState">Connected</div></div>
+      <div class="tcms-cell"><div class="lab">Line Voltage DC750 / DC</div><div class="num"><b id="lineV">750</b> V</div></div>
+      <div class="tcms-cell"><div class="lab">Inverter Current (Negative for Regen)</div><div class="num motor-i-wrap neutral" id="motorCurrentWrap"><b id="motorCurrentA">0</b><span> A</span></div></div>
+      <div class="tcms-cell"><div class="lab">Doors</div><div class="num" id="doorState">R Closed</div></div>
+      <div class="tcms-cell"><div class="lab">HVAC</div><div class="num" id="acState">OFF</div></div>
     </div>
-    <div class="tcms-log" id="tcmsLog"><div>[INIT] TCMS MB-TN 启动…</div></div>
+    <div class="tcms-log" id="tcmsLog"><div>[INIT] TCMS MB-TN Starting…</div></div>
   </div>
 </body>
 </html>

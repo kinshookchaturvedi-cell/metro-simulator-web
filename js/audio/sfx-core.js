@@ -1,4 +1,4 @@
-/** 驾驶室提示音：蜂鸣、警铃共用音频上下文 */
+/** Cab audio alerts: Beep and alarm share the same audio context */
 
 let audioCtx = null;
 

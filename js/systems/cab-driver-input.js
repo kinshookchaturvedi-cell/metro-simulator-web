@@ -31,19 +31,19 @@ export function setMode(m) {
   if (targetIdx < 0) return;
   if (targetIdx > maxAuthorizedModeIndex()) {
     showMsg(
-      `不可选择 ${m}：已受「最高驾驶模式」限制（当前授权上限为 ${train.maxAuthorizedDrivingMode}）。可在右侧面板调高后再升级。`,
+      `Cannot select ${m}: Restricted by "Maximum Authorized Driving Mode" (Current limit: ${train.maxAuthorizedDrivingMode}). Increase the authorization limit on the right panel before upgrading.`,
       "alarm",
     );
-    tcmsLog(`模式切换被拒：目标 ${m} > 授权 ${train.maxAuthorizedDrivingMode}`, "alarm");
+    tcmsLog(`Mode switch rejected: Target ${m} > Authorized limit ${train.maxAuthorizedDrivingMode}`, "alarm");
     return;
   }
   if (m === "AM" || m === "FAM") {
     if (train.direction !== "F") {
-      showMsg("ATO/自动模式：请先将方向手柄置于「前进 F」", "alarm");
+      showMsg("ATO/Automatic Mode: Please set the reverser handle to 'Forward F' first", "alarm");
       return;
     }
     if (!train.zeroSpeed && Math.abs(train.lever) > 0.05) {
-      showMsg("自动模式升级：请先停稳并将主控手柄归零", "alarm");
+      showMsg("Automatic Mode Upgrade: Please ensure the train is at a standstill and return the master controller handle to zero", "alarm");
       return;
     }
   }
@@ -53,7 +53,7 @@ export function setMode(m) {
     mv.textContent = m;
     mv.className = "value " + m;
   }
-  showMsg(`模式切换 → ${m}`, "ok");
+  showMsg(`Mode switch → ${m}`, "ok");
   tcmsLog(`MODE: ${m}`, "info");
   beep(880, 0.1);
   if (m !== "AM" && m !== "FAM") {
@@ -77,8 +77,8 @@ export function setLever(v) {
   v = clamp(v, -1.2, 1);
   if (train.atoRunning && Math.abs(v) > 0.02) {
     disengageAto();
-    showMsg("ATO 退出（手柄移动）", "alarm");
-    tcmsLog("ATO 退出: 手柄不在零位", "err");
+    showMsg("ATO disengaged (Handle movement)", "alarm");
+    tcmsLog("ATO disengaged: Handle not in zero position", "err");
   }
   train.lever = v;
   syncLeverHandlePos(train.lever);

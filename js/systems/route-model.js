@@ -1,11 +1,11 @@
-/** 静态线路几何与轨旁设备数据（非仿真状态） */
+/** Static track alignment and wayside equipment data (non-simulation state) */
 export const STATIONS = [
-  { name: "古城", pos: 200, platform: "right" },
-  { name: "八角游乐园", pos: 1900, platform: "right" },
-  { name: "八宝山", pos: 3700, platform: "right" },
-  { name: "玉泉路", pos: 5300, platform: "right" },
-  { name: "五棵松", pos: 7100, platform: "right" },
-  { name: "军事博物馆", pos: 8400, platform: "right" },
+  { name: "Gucheng", pos: 200, platform: "right" },
+  { name: "Bajiao Amusement Park", pos: 1900, platform: "right" },
+  { name: "Babaoshan", pos: 3700, platform: "right" },
+  { name: "Yuquanlu", pos: 5300, platform: "right" },
+  { name: "Wukesong", pos: 7100, platform: "right" },
+  { name: "Military Museum", pos: 8400, platform: "right" },
 ];
 
 export const SPEED_ZONES = [

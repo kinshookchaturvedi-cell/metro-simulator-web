@@ -24,8 +24,8 @@ export function handleStation() {
     train.nextStationIdx++;
     clearDoorAtpAllows();
     if (train.nextStationIdx < STATIONS.length)
-      tcmsLog(`下一站 ${STATIONS[train.nextStationIdx].name}`, "info");
-    else tcmsLog("已抵达终点站", "ok");
+      tcmsLog(`Next station: ${STATIONS[train.nextStationIdx].name}`, "info");
+    else tcmsLog("Arrived at the terminal station", "ok");
     return;
   }
 
@@ -49,16 +49,16 @@ export function tryReleaseDoorAllowAligned(nextStn) {
   train.autoDoorReleased = true;
   train.doorAtpLeft = nextStn.platform === "left";
   train.doorAtpRight = nextStn.platform === "right";
-  const platZh = nextStn.platform === "left" ? "左" : "右";
+  const platEn = nextStn.platform === "left" ? "Left" : "Right";
   const e = train.pos - nextStn.pos;
   const errStrMag = Math.abs(e) < 1.2 ? `${(e * 100).toFixed(1)} cm` : `${e.toFixed(3)} m`;
   if (train.doorMode === "MM") {
-    showMsg(`对标停准（误差 ${errStrMag}），ATP ${platZh}侧站台门允许 · M/M 请开该侧车门`, "ok");
-    tcmsLog(`停准：ATP ${platZh}侧门允许 · ${errStrMag} · M/M 手动开门`, "ok");
+    showMsg(`Docked precisely (Error ${errStrMag}), ATP ${platEn} side platform door enabled · M/M please open doors on this side`, "ok");
+    tcmsLog(`Precise Stop: ATP ${platEn} side door enabled · ${errStrMag} · M/M manual door opening`, "ok");
     return;
   }
-  showMsg(`对标停准（误差 ${errStrMag}），ATP ${platZh}侧站台门允许`, "ok");
-  tcmsLog(`停准：ATP ${platZh}侧门允许 · 误差 ${errStrMag}`, "ok");
+  showMsg(`Docked precisely (Error ${errStrMag}), ATP ${platEn} side platform door enabled`, "ok");
+  tcmsLog(`Precise Stop: ATP ${platEn} side door enabled · Error ${errStrMag}`, "ok");
   if (train.mode === "AM" || train.mode === "FAM") {
     setTimeout(() => {
       if (train.doorMode !== "MM") openDoor(nextStn.platform);

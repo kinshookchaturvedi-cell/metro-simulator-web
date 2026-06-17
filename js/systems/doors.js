@@ -18,12 +18,12 @@ function syncDoorAggregateState() {
   else train.doorOpenSide = "none";
 }
 
-/** HMI 20 区「站台门未关闭」：开门中，或车门已关但 PSD 尚在关闭锁紧窗口内 */
+/** HMI Zone 20 "Platform Screen Doors Not Closed": Doors opening, or train doors are closed but PSDs are still within the closing and locking time window */
 export function platformScreenDoorsOpenForDmi() {
   return !train.doorClosed || Date.now() < train.psdAllClosedLockedNotBefore;
 }
 
-/** 该侧是否具备开门允许：仅人工「车门允许（两侧）」或 ATP 已释放该侧（含各模式停准站台后） */
+/** Checks if the specified side has door enable authorized: either manual "Door Enable (Both Sides)" is active, or ATP has released the side (after precise station docking in any mode) */
 export function doorSideEnabled(side) {
   if (train.doorManualBoth) return true;
   if (side === "left") return train.doorAtpLeft;
@@ -32,16 +32,16 @@ export function doorSideEnabled(side) {
 
 export function openDoor(side) {
   if (!train.zeroSpeed) {
-    showMsg("非零速，不能开门", "alarm");
+    showMsg("Train not at standstill, cannot open doors", "alarm");
     return;
   }
   if (!doorSideEnabled(side)) {
     train.doorIllegalOpenIndicateUntil = Date.now() + CONST.DMI_DOOR_ILLEGAL_INDICATE_MS;
     showMsg(
-      "非法打开：该侧无门允许。须本站停准后由 ATP 释放站台侧，或按「车门允许」人工授权两侧",
+      "Illegal Open: No door enable authorized on this side. The train must dock precisely at the station for ATP to release the platform side, or press 'Door Enable' for manual authorization on both sides",
       "alarm",
     );
-    tcmsLog(`非法开门尝试（无门允许） ${side}`, "alarm");
+    tcmsLog(`Illegal door open attempt (no door enable) on ${side} side`, "alarm");
     return;
   }
   train.doorIllegalOpenIndicateUntil = 0;
@@ -51,20 +51,20 @@ export function openDoor(side) {
   syncDoorAggregateState();
   train.psdAllClosedLockedNotBefore = 0;
   if (wasAllClosed) train.doorOpenedAtMs = Date.now();
-  showMsg(`${side === "left" ? "左" : "右"}侧车门已开`, "ok");
-  tcmsLog(`开门 ${side}`, "info");
+  showMsg(`${side === "left" ? "Left" : "Right"} side train doors opened`, "ok");
+  tcmsLog(`Door open: ${side}`, "info");
   beep(440, 0.2);
 }
 
-/** 关闭指定侧；两侧均关后触发 PSD 锁闭计时（与全关一致） */
+/** Closes the specified side; after both sides are fully closed, the PSD locking timer is triggered (identical to all-closed logic) */
 export function closeDoorSide(side) {
   const left = side === "left";
   if (left && !train.doorLeftOpen) {
-    showMsg("左侧车门未开启", "alarm");
+    showMsg("Left side train doors are not open", "alarm");
     return;
   }
   if (!left && !train.doorRightOpen) {
-    showMsg("右侧车门未开启", "alarm");
+    showMsg("Right side train doors are not open", "alarm");
     return;
   }
   if (left) train.doorLeftOpen = false;
@@ -73,25 +73,25 @@ export function closeDoorSide(side) {
   if (train.doorClosed) {
     train.doorOpenedAtMs = 0;
     train.psdAllClosedLockedNotBefore = Date.now() + CONST.PSD_PLATFORM_CLOSE_MS;
-    showMsg("车门关闭", "ok");
-    tcmsLog("关门（全列）", "info");
+    showMsg("Train doors closed", "ok");
+    tcmsLog("Door close (Full train)", "info");
   } else {
-    showMsg(`${left ? "左" : "右"}侧车门已关`, "ok");
-    tcmsLog(`关门 ${side}`, "info");
+    showMsg(`${left ? "Left" : "Right"} side train doors closed`, "ok");
+    tcmsLog(`Door close: ${side}`, "info");
   }
   beep(660, 0.1);
   setTimeout(() => beep(440, 0.1), 120);
 }
 
-/** 一次关闭两侧（A/A 自动关门等） */
+/** Closes both sides simultaneously (e.g., A/A automatic door closing) */
 export function closeDoor() {
   train.doorLeftOpen = false;
   train.doorRightOpen = false;
   syncDoorAggregateState();
   train.doorOpenedAtMs = 0;
   train.psdAllClosedLockedNotBefore = Date.now() + CONST.PSD_PLATFORM_CLOSE_MS;
-  showMsg("车门关闭", "ok");
-  tcmsLog("关门", "info");
+  showMsg("Train doors closed", "ok");
+  tcmsLog("Door close", "info");
   beep(660, 0.1);
   setTimeout(() => beep(440, 0.1), 120);
 }

@@ -1,4 +1,4 @@
-/** 国标 DMI（metro-simulator/vobc-dmi iframe）控件映射桥接 */
+/** National Standard DMI (metro-simulator/vobc-dmi iframe) control mapping bridge */
 import { clamp, ms2kmh } from "../lib/math.js";
 import { CONST } from "../config/constants.js";
 import { train } from "../systems/vehicle-state.js";
@@ -9,7 +9,7 @@ import { lastMmiMsg } from "./messages.js";
 import { $ } from "../lib/dom.js";
 import { platformScreenDoorsOpenForDmi } from "../systems/doors.js";
 
-/** DMI 18 区上行箭头：建议发车（晚点预警）；墙钟用 STATION_DWELL_DEPART_HINT_S（≠ A/A 自动关门时刻） */
+/** DMI Zone 18 upward arrow: Suggested departure (schedule delay warning); wall clock uses STATION_DWELL_DEPART_HINT_S (≠ A/A automatic door-closing timestamp) */
 function dmiZone18DepartSuggest() {
   if (!(train.mode === "AM" || train.mode === "FAM")) return false;
   if (!(train.doorMode === "AM" || train.doorMode === "AA")) return false;
@@ -24,7 +24,7 @@ function dmiZone18DepartSuggest() {
 }
 
 /**
- * 19 区 / TCMS 门模式文案。
+ * Zone 19 / TCMS door mode text.
  */
 export function formatDoorModeForDmi(mode) {
   const m = String(mode ?? "").trim();

@@ -1,4 +1,4 @@
-/** 若页面内仍存在独立速度表 SVG，则由此初始化刻度（可选用） */
+/** If a standalone speed gauge SVG still exists on the page, initialize the scale from here (optional). */
 import { clamp } from "../lib/math.js";
 import { $ } from "../lib/dom.js";
 

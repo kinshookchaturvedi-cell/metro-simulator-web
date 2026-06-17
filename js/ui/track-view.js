@@ -1,4 +1,4 @@
-/** ATS / 示意图静态 SVG 绘制与列车图标 */
+/** ATS / Schematic diagram static SVG rendering and train icons */
 import { $ } from "../lib/dom.js";
 import { SPEED_ZONES, STATIONS, SIGNALS, BALISES, posToX } from "../systems/route-model.js";
 import { train } from "../systems/vehicle-state.js";

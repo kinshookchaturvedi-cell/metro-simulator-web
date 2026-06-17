@@ -1,4 +1,4 @@
-/** 车体环境声（与告警蜂鸣共用 audio()） */
+/** Carbody ambient sound (shares audio() with the alarm buzzer) */
 import { clamp, ms2kmh } from "../lib/math.js";
 import { audio } from "./sfx-core.js";
 import { $ } from "../lib/dom.js";

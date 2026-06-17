@@ -17,7 +17,7 @@ export function renderDashboard() {
 
   setText("totalDist", train.pos.toFixed(0));
   setText("absPos", train.pos.toFixed(1));
-  setText("atpLevel", train.atpActive ? "CBTC L2" : "降级");
+  setText("atpLevel", train.atpActive ? "CBTC L2" : "Degraded");
   setText("moveAuth", ns ? Math.max(0, ns.pos - train.pos).toFixed(0) + "m" : "—");
 
   const trBar = $("trBar");
@@ -28,7 +28,7 @@ export function renderDashboard() {
   setText("bkPct", String(train.bkPct));
   setText("mrPress", train.mrPress.toFixed(0));
   setText("bcPress", train.bcPress.toFixed(0));
-  setText("thirdRailState", train.keyOn ? "集电接通" : "ZK OFF");
+  setText("thirdRailState", train.keyOn ? "Power Connected" : "ZK OFF");
   setText("lineV", train.keyOn ? "750" : "0");
 
   const ia = train.motorCurrentA;
@@ -43,22 +43,22 @@ export function renderDashboard() {
   const dms = formatDoorModeForDmi(train.doorMode);
   const doorTxt =
     train.doorOpenSide === "both"
-      ? "双开"
+      ? "Both Open"
       : train.doorOpenSide === "left"
-        ? "左开"
+        ? "Left Open"
         : train.doorOpenSide === "right"
-          ? "右开"
-          : "全关";
+          ? "Right Open"
+          : "All Closed";
   const allowHint =
-    train.doorManualBoth ? "人双" : train.doorAtpLeft ? "ATP左" : train.doorAtpRight ? "ATP右" : "—";
+    train.doorManualBoth ? "Man Both" : train.doorAtpLeft ? "ATP Left" : train.doorAtpRight ? "ATP Right" : "—";
   setText("doorState", `${doorTxt} · ${dms || "—"} · ${allowHint}`);
-  setText("acState", train.ac ? "开" : "关");
+  setText("acState", train.ac ? "ON" : "OFF");
 
   setText("leverPos", (train.lever * 100).toFixed(0));
-  let st = "惰行";
-  if (train.lever <= -1.05) st = "EB 快速制动";
-  else if (train.lever < -0.05) st = "常用制动";
-  else if (train.lever > 0.05) st = "牵引";
+  let st = "Coasting";
+  if (train.lever <= -1.05) st = "EB / Rapid Brake";
+  else if (train.lever < -0.05) st = "Service Brake";
+  else if (train.lever > 0.05) st = "Traction";
   setText("leverState", st);
 
   const btnAto = $("btnATO");

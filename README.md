@@ -77,16 +77,16 @@ The left screen DMI page is a copy of `project/vobc-hmi/index.html`. If the upst
 - **ATP Overspeed Protection:** Exceeding the speed limit by +5 km/h will immediately trigger the Emergency Brake (EB).
 
 ## File Structure
-metro-simulator/
+<pre><code>metro-simulator/
 ├── index.html
 ├── style.css
 ├── vobc-dmi/
 │   └── index.html             # DMI Interface
 ├── js/
-│   ├── main.js                 # Entry point: Main loop & DOM event binding
+│   ├── main.js                 # Entry point: Main loop &amp; DOM event binding
 │   ├── config/constants.js     # Calibration constants
-│   ├── lib/                    # DOM & numerical utilities
+│   ├── lib/                    # DOM &amp; numerical utilities
 │   ├── systems/                # Core systems: ATP, ATO, Physics, Platform, Doors, EB, etc.
 │   ├── audio/                  # Buzzer and ambient sound systems
 │   └── ui/                     # DMI bridging, track schematics, instrument dashboards
-└── README.md
+└── README.md</code></pre>

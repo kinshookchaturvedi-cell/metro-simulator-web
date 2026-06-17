@@ -1,6 +1,6 @@
 /**
- * 组装入口：仿真主循环、DOM 事件与各子系统实例化前的最后编排。
- * 业务逻辑见 js/systems/* 、js/audio/* 、js/ui/*
+ * Assembly Entry Point: Simulation main loop, DOM events, and final orchestration before subsystem instantiation.
+ * Business logic can be found in js/systems/*, js/audio/*, js/ui/*
  */
 import { CONST } from "./config/constants.js";
 import { $ } from "./lib/dom.js";
@@ -76,15 +76,15 @@ $("btnHorn")?.addEventListener("mousedown", () => {
 $("btnATO")?.addEventListener("click", () => {
   if (!atoStartPreconditionsMet()) {
     showMsg(
-      "ATO 条件未满足：钥匙 ON、AM/FAM、前进 F、手柄零位、门关好锁紧、无 EB、未扣车、非站停中、已停稳，且前方具备移动授权空间",
+      "ATO prerequisites not met: Key ON, AM/FAM mode, Forward (F), Master controller handle at zero, Doors closed and locked, No EB, Train not held, Not dwelling, Standstill confirmed, and Sufficient Movement Authority (MA) available ahead.",
       "alarm",
     );
     return;
   }
   train.atoReady = true;
   train.atoRunning = true;
-  showMsg("ATO 启动 - 自动驾驶", "ok");
-  tcmsLog("ATO 启动（人工确认）", "ok");
+  showMsg("ATO Engaged - Automatic Driving", "ok");
+  tcmsLog("ATO Engaged (Manual Confirmation)", "ok");
   beep(880, 0.1);
   setTimeout(() => beep(1100, 0.15), 120);
 });
@@ -92,14 +92,14 @@ $("btnATO")?.addEventListener("click", () => {
 $("btnModeUp")?.addEventListener("click", modeUp);
 $("btnModeDown")?.addEventListener("click", modeDown);
 $("btnConfirm")?.addEventListener("click", () => {
-  showMsg("确认", "ok");
+  showMsg("Confirmed", "ok");
   beep(880, 0.05);
 });
 $("btnDoorEnable")?.addEventListener("click", () => {
   train.doorManualBoth = !train.doorManualBoth;
   $("btnDoorEnable")?.classList.toggle("on", train.doorManualBoth);
-  showMsg(`人工车门允许（两侧） ${train.doorManualBoth ? "ON" : "OFF"}`, "ok");
-  tcmsLog(`人工门允许 ${train.doorManualBoth ? "两侧" : "关"}`, "info");
+  showMsg(`Manual Door Enable (Both Sides) ${train.doorManualBoth ? "ON" : "OFF"}`, "ok");
+  tcmsLog(`Manual Door Enable: ${train.doorManualBoth ? "Both Sides" : "OFF"}`, "info");
 });
 $("btnSkip")?.addEventListener("click", () => {
   train.skipStation = !train.skipStation;
@@ -115,7 +115,7 @@ $("doorModeSelect")?.addEventListener("change", (e) => {
   if (v === "MM" || v === "AM" || v === "AA") {
     train.doorMode = v;
     const lab = v === "MM" ? "M/M" : v === "AM" ? "A/M" : "A/A";
-    tcmsLog(`门模式 → ${lab}`, "info");
+    tcmsLog(`Door Mode → ${lab}`, "info");
     beep(660, 0.06);
   }
 });
@@ -124,14 +124,14 @@ $("maxAuthModeSelect")?.addEventListener("change", (e) => {
   const v = e.target.value;
   if (v === "RM" || v === "CM" || v === "AM" || v === "FAM") {
     train.maxAuthorizedDrivingMode = v;
-    tcmsLog(`最高驾驶模式（DMI 5 区授权） → ${v}`, "info");
+    tcmsLog(`Maximum Authorized Driving Mode (DMI Zone 5 Authorization) → ${v}`, "info");
     beep(620, 0.06);
   }
 });
 
 $("emergencyBtn")?.addEventListener("click", () => {
   if (train.ebActive) releaseEB();
-  else triggerEB("司机紧急按钮");
+  else triggerEB("Driver Emergency Button");
 });
 
 document.querySelectorAll(".ks-btn").forEach((b) => {
@@ -140,7 +140,7 @@ document.querySelectorAll(".ks-btn").forEach((b) => {
     b.classList.add("active");
     train.keyOn = b.dataset.key === "on";
     document.body.classList.toggle("cab-off", !train.keyOn);
-    showMsg(train.keyOn ? "司机室激活" : "司机室关闭", "ok");
+    showMsg(train.keyOn ? "Cab Activated" : "Cab Deactivated", "ok");
     tcmsLog(`KEY ${train.keyOn ? "ON" : "OFF"}`);
   });
 });
@@ -148,14 +148,14 @@ document.querySelectorAll(".ks-btn").forEach((b) => {
 document.querySelectorAll(".dir-pos").forEach((b) => {
   b.addEventListener("click", () => {
     if (Math.abs(train.vel) > 0.2) {
-      showMsg("方向：列车需停稳", "alarm");
+      showMsg("Direction: Train must be at a standstill", "alarm");
       return;
     }
     document.querySelectorAll(".dir-pos").forEach((x) => x.classList.remove("active"));
     b.classList.add("active");
     train.direction = b.dataset.dir;
     if (train.direction !== "F") disengageAto();
-    tcmsLog(`方向 ${train.direction}`);
+    tcmsLog(`Direction ${train.direction}`);
     beep(660, 0.05);
   });
 });
@@ -221,7 +221,7 @@ window.addEventListener("keydown", (e) => {
 });
 
 $("btnReset")?.addEventListener("click", () => {
-  if (!confirm("重置整个模拟？")) return;
+  if (!confirm("Reset the entire simulation?")) return;
   Object.assign(train, {
     pos: 0,
     vel: 0,
@@ -280,8 +280,8 @@ $("btnReset")?.addEventListener("click", () => {
   if (dmSel) dmSel.value = train.doorMode;
   const maxSel = $("maxAuthModeSelect");
   if (maxSel) maxSel.value = train.maxAuthorizedDrivingMode;
-  showMsg("系统重置完成", "ok");
-  tcmsLog("=== 系统重置 ===", "info");
+  showMsg("System reset complete", "ok");
+  tcmsLog("=== System Reset ===", "info");
   syncLeverHandlePos(train.lever);
 });
 
@@ -304,11 +304,11 @@ function init() {
   syncLeverHandlePos(train.lever);
   $("btnCabinLight")?.classList.add("on");
   $("btnSalonLight")?.classList.add("on");
-  showMsg("系统就绪 · RM 限制模式 · ZK=ON 时请建立方向手柄（前进 F）后牵引", "ok");
-  tcmsLog("=== METRO-SIM 启动完成 ===", "ok");
-  tcmsLog("CBTC 信号系统初始化", "info");
-  tcmsLog("MB-TN TCMS 自检完成", "info");
-  tcmsLog(`下一站：${STATIONS[0].name}`, "info");
+  showMsg("System Ready · RM Restricted Mode · Establish reverser direction (Forward F) before applying traction when ZK=ON", "ok");
+  tcmsLog("=== METRO-SIM Startup Complete ===", "ok");
+  tcmsLog("CBTC Signaling System Initialized", "info");
+  tcmsLog("MB-TN TCMS Self-Test Complete", "info");
+  tcmsLog(`Next Station: ${STATIONS[0].name}`, "info");
   $("mmi-vobc")?.addEventListener("load", () => {
     resetVobcDmiThrottle();
     postVobcDmi();

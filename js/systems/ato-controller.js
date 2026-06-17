@@ -1,6 +1,8 @@
 /**
- * ATO：仅输出纵向牵引/制动加速度（加速度经 CMD_ACC_TAU 与车体共同积分）。
- * 位置与速度仅由动力学积分得到；站停 dwelling 内不施加对标蠕动牵引。
+ * ATO: Outputs only longitudinal traction/braking acceleration (acceleration is integrated 
+ * together with the vehicle body via CMD_ACC_TAU).
+ * Position and velocity are derived solely by dynamics integration; no docking creep traction 
+ * is applied during station dwelling.
  */
 import { CONST } from "../config/constants.js";
 import { clamp, ms2kmh } from "../lib/math.js";
@@ -33,7 +35,7 @@ export function atoControl(atpLimit, ebiLimit, _targetInfo) {
   const ns = STATIONS[train.nextStationIdx];
   const auto = train.mode === "AM" || train.mode === "FAM";
 
-  /** 站停乘降：双向抱闸（与 EB 工况同类）；禁止单向负加速度在速度过零后变成「倒车牵引」 */
+  /** Station dwelling boarding/alighting: Bidirectional brake application (similar to EB conditions); prevents unidirectional negative acceleration from turning into "reverse traction" after velocity crosses zero */
   if (train.dwelling) {
     const mag = 0.42 * CONST.MAX_SERVICE_BRK;
     const v = train.vel;
@@ -44,7 +46,7 @@ export function atoControl(atpLimit, ebiLimit, _targetInfo) {
 
   const dAhead = ns ? ns.pos - train.pos : Infinity;
 
-  /** 末端蠕动：收紧到站窗口后，低速停在窗外时需微量牵引贴近停车标 */
+  /** Terminal creep / inching: After tightening the arrival window, if the train stops outside the window at a low speed, a minute amount of traction is required to bring it close to the stopping marker */
   if (
     auto &&
     ns &&
@@ -86,7 +88,7 @@ export function atoControl(atpLimit, ebiLimit, _targetInfo) {
   let acc;
   if (inApproach) {
     if (errMs > 0.1) acc = clamp(0.36 * errMs, 0, 0.58 * CONST.MAX_TRACTION_ACC);
-    /** 超速相对曲线：加大制动增益，避免仅靠偏弱比例项滞后冲标 */
+    /** Overspeed relative to the curve: Increase the braking gain to prevent overrunning the marker due to lag from a weak proportional term */
     else if (errMs < -0.1)
       acc = clamp(0.78 * errMs, -CONST.MAX_SERVICE_BRK, 0);
     else acc = 0;
@@ -115,7 +117,7 @@ export function atoControl(atpLimit, ebiLimit, _targetInfo) {
     acc = Math.min(acc, -t * CONST.MAX_SERVICE_BRK);
   }
 
-  /** 距离–速度制动曲线下限：当前动能须在剩余距离内以不超过常用制动停尽（对标前移 + 安全系数） */
+  /** Distance-velocity braking curve lower limit: The current kinetic energy must be completely dissipated within the remaining distance without exceeding service braking (docking forward shift + safety factor) */
   if (auto && ns && dAhead > 0 && train.vel > 0.04) {
     const dEff = Math.max(0.35, dAhead - CONST.ATO_STOP_MARGIN_M);
     const needMag =

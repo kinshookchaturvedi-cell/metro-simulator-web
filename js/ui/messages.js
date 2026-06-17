@@ -1,7 +1,7 @@
 import { $ } from "../lib/dom.js";
 
-export let lastMmiMsg = "系统就绪";
-/** 与左屏 MMI 告警条样式同步（由 render-mmi 每帧刷 class） */
+export let lastMmiMsg = "System Ready";
+/** Synchronized with the left-screen MMI alarm banner style (updated every frame by render-mmi via class manipulation) */
 export let lastMmiMsgLevel = "info";
 
 let logCount = 0;

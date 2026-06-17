@@ -1,4 +1,4 @@
-/** 列车与司机室运行状态（单列车仿真域） */
+/** Train and cab operational state (single-train simulation domain) */
 export const train = {
   pos: 0,
   vel: 0,
@@ -14,26 +14,26 @@ export const train = {
   atoRunning: false,
   ebActive: false,
   ebReason: "",
-  /** ATP/停稳自动释放：仅站台侧为 true（与 route 中 platform 一致） */
+  /** ATP / standstill automatic enable: true only on the platform side (aligned with the platform property in route data) */
   doorAtpLeft: false,
   doorAtpRight: false,
-  /** 人工「车门允许」：为 true 时两侧均可开门（CM/调车等） */
+  /** Manual "Door Enable": when true, doors can be opened on both sides (used in CM / shunting, etc.) */
   doorManualBoth: false,
-  /** 门模式：MM 手开手关 · AM 自开手关 · AA 自开自关（仅影响 AM/FAM 停站自动化） */
+  /** Door mode: MM (Manual Open / Manual Close), AM (Automatic Open / Manual Close), AA (Automatic Open / Automatic Close) - only affects AM/FAM station dwell automation */
   doorMode: "AA",
-  /** DMI 5 区「最高驾驶模式」授权上限：RM / CM / AM / FAM（结合 ATP 级别映射为 -C / -I） */
+  /** DMI Zone 5 "Maximum Driving Mode" authorization upper limit: RM / CM / AM / FAM (mapped to -C / -I when combined with the ATP level) */
   maxAuthorizedDrivingMode: "FAM",
-  /** 各侧车门开启（可双侧同时开） */
+  /** Door open state for each side (both sides can be open simultaneously) */
   doorLeftOpen: false,
   doorRightOpen: false,
-  /** 汇总：左/右/双侧/无，由 doors 模块同步 */
+  /** Summary: left / right / both / none, synchronized by the doors module */
   doorOpenSide: "none",
   doorClosed: true,
-  /** PSD 全部关闭锁紧的最早时刻 (ms)；门关好后推进，在此之前 HMI 20 区显示未关闭 */
+  /** Earliest timestamp (ms) when all Platform Screen Doors (PSD) are completely closed and locked; advanced after train doors close, before which HMI Zone 20 displays "Not Closed" */
   psdAllClosedLockedNotBefore: 0,
-  /** 最近一次开门时刻 (epoch ms)，用于 18 区关门提示延时 */
+  /** Timestamp of the most recent door opening event (epoch ms), used for the Zone 18 door-closing prompt delay */
   doorOpenedAtMs: 0,
-  /** 无允许开门尝试：至此时间前若车门实际开启则 DMI 17 区显示非法打开 (epoch ms) */
+  /** Door open attempt without enable: if doors are actually opened before this timestamp, DMI Zone 17 displays "Illegally Opened" (epoch ms) */
   doorIllegalOpenIndicateUntil: 0,
   zeroSpeed: true,
 
@@ -47,11 +47,11 @@ export const train = {
   nextStationIdx: 0,
   dwelling: false,
   dwellTimer: 0,
-  /** AM/FAM：本站是否曾开过门；关门结束站停时需此标志，避免到站瞬间车门关闭误判离站 */
+  /** AM/FAM: Whether doors have been opened at this station; required when ending station dwelling upon door closure, to prevent false departure detection at the moment of arrival when doors are closed */
   dwellHadDoorOpenDuringStop: false,
-  /** DMI 18 区「建议发车」时钟起点 (epoch ms)；与 ATP 许可无关 */
+  /** DMI Zone 18 "Departure Suggested" clock start time (epoch ms); independent of ATP permission */
   departSuggestEpochMs: 0,
-  /** 对应 STATIONS 索引；-1 表示未锚定本站 */
+  /** Corresponding index in STATIONS; -1 indicates not anchored to the current station */
   departSuggestAnchorIdx: -1,
   holdAtStation: false,
   skipStation: false,
@@ -62,6 +62,6 @@ export const train = {
   trPct: 0,
   bkPct: 0,
   _cmdAccLag: 0,
-  /** 牵引变流器等效直流侧电流（A），正值牵引、再生制动为负 */
+  /** Equivalent DC-link current of the traction inverter (A); positive values for traction, negative for regenerative braking */
   motorCurrentA: 0,
 };

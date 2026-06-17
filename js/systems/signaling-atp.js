@@ -1,6 +1,7 @@
 /**
- * 信号 / ATP 层：区段限速、常用/紧急制动曲线、目标距离等。
- * 不直接积分列车运动；对外提供速度监督与目标信息供 ATO、DMI、仿真器使用。
+ * Signaling / ATP Layer: Zone speed limits, service/emergency braking curves, target distance, etc.
+ * Does not directly integrate train motion; externally provides speed supervision and target 
+ * information for use by ATO, DMI, and the simulator.
  */
 import { CONST } from "../config/constants.js";
 import { clamp, ms2kmh, kmh2ms } from "../lib/math.js";

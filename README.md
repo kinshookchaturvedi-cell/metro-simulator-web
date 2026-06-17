@@ -1,98 +1,92 @@
-# 中国地铁列车驾驶模拟器 / Metro Driver Simulator
+# China Metro Train Driving Simulator / Metro Driver Simulator
 
-一个高度还原中国城市轨道交通驾驶台的浏览器模拟器，参考：
+A browser-based simulator that highly restores a Chinese urban rail transit driver's cab, developed with reference to:
 
-- 信号系统：**交控科技 (TCT) CBTC** 移动闭塞，参考 *T/CAMET 04003*、*IEEE 1474*、*IEC 62267*。
-- 车辆：**中国中车 (CRRC) B 型车** 6 节编组（Tc-M-M-M-M-Tc），**第三轨 DC750V** 集电靴受流。
-- 列车控制与监视系统（TCMS）：参考交控科技 **MB-TN 系列** 列车控制及诊断系统。
-- 驾驶台规范：参考 *GB/T 7928《地铁车辆通用技术条件》* 与公开的城轨教学/培训资料。
+- Signaling System: **Traffic Control Technology (TCT) CBTC** Moving Block, referencing *T/CAMET 04003*, *IEEE 1474*, and *IEC 62267*.
+- Rolling Stock: **CRRC Type B Train** in a 6-car configuration (Tc-M-M-M-M-Tc), powered by a **DC 750V third rail** via collector shoes.
+- Train Control and Monitoring System (TCMS): Referencing TCT's **MB-TN series** train control and diagnostic system.
+- Driver's Cab Specifications: Referencing *GB/T 7928 "General Technical Specification for Metro Vehicles"* and public urban rail transit teaching/training materials.
 
-> 本模拟器仅用于教学与体验，严禁用于实际培训或运营！
+> **Notice:** This simulator is for educational and experiential purposes only. It is strictly prohibited for actual training or commercial operations!
 
 ---
 
-## 屏幕部分（screens）
+## Screens
 
+| Zone / Area | Content |
+| :--- | :--- |
+| **Signaling HMI (Left Screen)** | Uses a **1024×768 National Standard DMI** (`vobc-dmi/index.html` via iframe, with `?embed=1` appended to hide the debugging panel). Synchronizes 25-zone data with the simulation via `postMessage`. |
+| **ATS Signaling Monitor** | Track schematic diagram, 6 platforms, signals, balises, speed-restricted zones, real-time train position, and Movement Authority (MA). |
+| **TCMS Train Monitor (Right Screen)** | 6-car train status, traction/braking force percentages, main reservoir/brake cylinder pressures, third rail power supply indication, line voltage, train doors, HVAC, and scrolling event logs. |
 
-| 区域            | 内容                                                                   |
-| ------------- | -------------------------------------------------------------------- |
-| 信号 HMI（左屏）    | 使用 **1024×768 国标 DMI**（`vobc-dmi/index.html` iframe，`?embed=1` 隐藏调试面板），由 `postMessage` 与仿真同步 25 区数据 |
-| ATS 信号监视  | 线路示意图、6 个站台、信号机、应答器、限速段、列车实时位置、移动授权                                  |
-| TCMS 列车监视（右屏） | 6 节编组车体状态、牵引/制动力百分比、总风缸/制动缸压力、第三轨受流指示、网压、车门、空调、滚动事件日志                |
+![Figure 1](images/demo/photo_01.png)
 
-![图 1](images/demo/photo_01.png)
+## Console / Controls
 
-## 控制部分（console）
+| Zone / Area | Equipment |
+| :--- | :--- |
+| **Left Auxiliary Controls** | Driver's key switch (ZK), headlights, cab lights, saloon lights, HVAC, wipers, Door Open Left/Right/Close, horn. |
+| **Center Master Controls** | Direction handle (F/N/R), **Master Controller / Traction Brake Controller (TBC)** (Traction ↑ — 0 — Service Brake — EB Rapid Brake; supports dragging or `W`/`S` keys). |
+| **Right Signaling Controls** | ATO Start, Mode Upgrade/Downgrade (RM → CM → AM → FAM), Acknowledge, Door Enable, Station Skip, Train Hold, **Emergency Brake (EB)** (red mushroom button). |
 
+![Figure 2](images/demo/photo_02.png)
 
-| 区域   | 设备                                                                            |
-| ---- | ----------------------------------------------------------------------------- |
-| 左侧辅助 | 司机钥匙 ZK、头灯、司机室灯、客室灯、空调、雨刮、左/右/关门、鸣笛                                           |
-| 中央主控 | 方向手柄（F/N/R）、**主控手柄 TBC**（牵引↑─0─常用制动─EB 快速制动，可拖拽 / W/S 键）                      |
-| 右侧信号 | ATO 启动、模式升级/降级（RM→CM→AM→FAM）、确认、车门允许、跳停、扣车、**紧急制动 EB**（红色蘑菇按钮） |
+## Mode Descriptions
 
-![图 2](images/demo/photo_02.png)
+- **RM (Restricted Manual):** Restricted manual driving mode, restricted to a maximum speed of 25 km/h.
+- **CM (Coded Manual):** Manual driving mode under ATP protection, where the ATP supervises train overspeed and track signaling.
+- **AM (Automatic Mode):** Automatic driving mode (ATO), featuring automatic operation following energy-saving speed curves combined with precise station docking.
+- **FAM (Fully Automatic Mode):** Fully Automatic Operation (FAO/UTO), completely unattended driverless operation.
 
-## 模式说明
+## How to Run
 
-- **RM**：限制人工驾驶，最高 25 km/h。
-- **CM**：ATP 防护下的人工驾驶，由 ATP 监督超速、信号。
-- **AM**：列车自动运行（ATO），按节能曲线自动运行 + 精准停车。
-- **FAM**：全自动运行（FAO/UTO），无人值守。
+Simply open `index.html` directly in your browser; no web server is required (it must remain in the same directory as `vobc-dmi/` for the left screen iframe to load properly).
 
-## 运行
+**Repository Path:** `/project/metro-simulator/` (When deploying, include the entire `metro-simulator` directory, **including `vobc-dmi/`**).
 
-直接在浏览器中打开 `index.html` 即可，无需服务器（须与 `vobc-dmi/` 保持在同一目录，左屏 iframe 才能加载）。
+The left screen DMI page is a copy of `project/vobc-hmi/index.html`. If the upstream National Standard interface is revised, you can overwrite `vobc-dmi/index.html` with that file.
 
-站内路径（本项目仓库）：`/project/metro-simulator/`（部署时包含整个 `metro-simulator` 目录，**含 `vobc-dmi/`**）。
+## Operating Procedures
 
-左屏 DMI 页面为 `project/vobc-hmi/index.html` 的副本；若上游修订国标界面，可将该文件覆盖到 `vobc-dmi/index.html`。
+1. Turn the driver's key switch (**ZK**) to **ON**.
+2. Set the direction handle to **Forward (F)**.
+3. The mode defaults to **RM**. Press **Mode Upgrade** to enter **CM** or **AM** mode.
+4. **In AM mode:** Return the master controller handle to zero + ensure all train doors are closed → Press **ATO Start** → The train will automatically accelerate and drive to the next station.
+5. Upon arrival at the station, press **Door Enable** + **Right Door** (or Left Door depending on the platform layout) to open the doors.
+6. Press **Close Doors**, then wait for the departure signal before starting again.
+7. Press **EB** at any time to trigger an emergency brake; once completely stopped, press EB again (or at the same position) to release the brake.
 
-## 操作流程
+## Keyboard Controls / Shortcuts
 
-1. 钥匙 ZK 打到 ON。
-2. 方向手柄选 **前进 F**。
-3. 模式默认 **RM**，可按 **模式升级** 进入 CM、AM。
-4. 在 AM 模式下：手柄归零 + 车门关闭 → 按 **ATO 启动** → 列车自动驾驶到下一站。
-5. 到站后按 **车门允许** + **右门** 开门。
-6. 按 **关门**，待信号后再启动。
-7. 任何时刻按 **EB** 触发紧急制动；停稳后再按 EB（或同位置）缓解。
+- `W / S`: Master controller handle ±10%
+- `Q / E`: Mode Upgrade / Downgrade
+- `Enter`: ATO Start
+- `Esc`: Emergency Brake (EB)
+- `H`: Horn
 
-## 键盘
+![Figure 3](images/demo/photo_03.png)
 
-- `W / S`：主控手柄 ±10%
-- `Q / E`：模式 升 / 降
-- `Enter`：ATO 启动
-- `Esc`：紧急制动
-- `H`：鸣笛
+## Physics Model (Simplified)
 
-![图 1](images/demo/photo_03.png)
+- Maximum traction acceleration: 1.0 m/s²
+- Maximum service braking deceleration: 1.1 m/s²
+- Emergency / Rapid braking deceleration: 1.3 m/s²
+- Rolling resistance + aerodynamic drag (rough approximation).
+- **Station Platform Stopping (ATO):** The door enable window threshold is approximately **±5 cm**. In the simulation, the ATO **only outputs traction/braking acceleration**. The position and velocity are entirely derived by the physics engine using **numerical integration** based on track profiles (target distance), resistance forces, and train response characteristics; **no direct position adjustments are artificially forced on the train**.
+- The ATP service braking curve inside the station is shifted forward by about **0.5 m** (simulating the same order of magnitude of redundancy as a real train; an excessive forward shift would command a zero-speed target several meters ahead of the marker, causing a meter-level undershoot).
+- **ATP Overspeed Protection:** Exceeding the speed limit by +5 km/h will immediately trigger the Emergency Brake (EB).
 
-## 物理模型（简化）
-
-- 最大牵引加速度 1.0 m/s²
-- 最大常用制动 1.1 m/s²
-- 紧急/快速制动 1.3 m/s²
-- 滚动阻力 + 空气阻力（粗略）
-- 站台停车（ATO）：车门允许阈值约 **±5 cm**。仿真中 ATO **只发出牵引/制动加速度**，位置与速度全部由物理引擎按轨道（目标距离）、阻力与车体响应<strong>数值积分</strong>得到；**不对列车位置做任何直接修正**。
-- ATP 站内常用制动曲线前移约 **0.5 m**（与实车冗余同量级仿真；过大的前移会令列车在距标数米处即被要求零速而出现米级欠标）
-- ATP 超速保护：超出限速 +5 km/h 立即施加 EB
-
-## 文件结构
-
-```
+## File Structure
 metro-simulator/
 ├── index.html
 ├── style.css
 ├── vobc-dmi/
-│   └── index.html             # DMI 界面
+│   └── index.html             # DMI Interface
 ├── js/
-│   ├── main.js                 # 入口：主循环、DOM 事件绑定
-│   ├── config/constants.js     # 标定常量
-│   ├── lib/                    # DOM / 数值工具
-│   ├── systems/                # ATP、ATO、物理、站台、车门、紧急制动等
-│   ├── audio/                  # 蜂鸣与环境声
-│   └── ui/                     # DMI 桥接、线路示意图、仪表盘
+│   ├── main.js                 # Entry point: Main loop & DOM event binding
+│   ├── config/constants.js     # Calibration constants
+│   ├── lib/                    # DOM & numerical utilities
+│   ├── systems/                # Core systems: ATP, ATO, Physics, Platform, Doors, EB, etc.
+│   ├── audio/                  # Buzzer and ambient sound systems
+│   └── ui/                     # DMI bridging, track schematics, instrument dashboards
 └── README.md
-```
-

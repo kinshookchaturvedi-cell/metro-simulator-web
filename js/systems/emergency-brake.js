@@ -8,23 +8,23 @@ export function triggerEB(reason) {
   train.ebActive = true;
   disengageAto();
   train.ebReason = reason;
-  showMsg(`紧急制动！${reason}`, "alarm");
-  tcmsLog(`EB 触发: ${reason}`, "err");
+  showMsg(`Emergency Brake applied! ${reason}`, "alarm");
+  tcmsLog(`EB Triggered: ${reason}`, "err");
   startAlarm();
 }
 
 export function releaseEB() {
   if (!train.zeroSpeed) {
-    showMsg("EB 缓解需先停稳", "alarm");
+    showMsg("Standstill required for EB release", "alarm");
     return;
   }
   if (Math.abs(train.lever) > 0.05) {
-    showMsg("EB 缓解：请先将手柄归零", "alarm");
+    showMsg("EB Release: Please return the master controller handle to zero first", "alarm");
     return;
   }
   train.ebActive = false;
   train.ebReason = "";
-  showMsg("EB 已缓解", "ok");
-  tcmsLog("EB 缓解", "ok");
+  showMsg("EB released", "ok");
+  tcmsLog("EB released", "ok");
   stopAlarm();
 }

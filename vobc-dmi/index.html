@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>车载信号人机界面</title>
+    <title>Onboard Signal Human-Machine Interface</title>
     <style>
         body {
             background-color: #1a1a1a;
@@ -18,7 +18,7 @@
 
         .simulator { display: flex; gap: 20px; transform: scale(0.85); transform-origin: center center; }
 
-        /* 左侧 DMI：内容区精确 1024×768（4:3）；画框用 inset 阴影避免 border 吃掉内容比例 */
+        /* Left DMI: Content area exactly 1024×768 (4:3); frame uses inset shadow to prevent border from shrinking content proportions */
         .dmi-container {
             box-sizing: border-box;
             width: 1024px;
@@ -41,7 +41,7 @@
             display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden;
         }
 
-        /* 严格国标颜色 */
+        /* Strict National Standard (GB) Colors */
         .c-red { color: rgb(189, 0, 0); } 
         .c-yellow { color: rgb(255, 242, 0); }
         .c-green { color: rgb(45, 144, 51); } 
@@ -51,12 +51,12 @@
         .val { font-size: 26px; font-weight: bold; z-index: 2; text-align: center; width: 100%;}
         .label { color: rgb(37, 151, 230); font-size: 22px; z-index: 2;}
 
-        /* 分区高度定义（r1–r4 合计 = 768，配合 1024×768 的 4:3 屏）
-           横行宽度核验：127+290+290+317=1024；662+362=1024；127+534+?=662→127+535=662 */
+        /* Zone height definitions (r1–r4 total = 768, matching 1024×768 4:3 screen)
+           Row width verification: 127+290+290+317=1024; 662+362=1024; 127+534+?=662 -> 127+535=662 */
         .r1 { height: 98px; } .r2 { height: 427px; } .r3 { height: 85px; } .r4 { height: 158px; }
         .row.r2 { align-items: stretch; min-height: 0; }
         .z1 { width: 127px; } .z8, .z9 { width: 290px; justify-content: flex-start; padding-left: 20px;} .z10{ width: 317px; font-size: 28px; }
-        /* r2 中部左列（与右侧同高） */
+        /* r2 Center-left column (same height as right side) */
         .mid-left {
             width: 662px;
             display: flex;
@@ -66,7 +66,7 @@
         }
         .z2 { width: 127px; position: relative; flex-shrink: 0; align-self: stretch; }
         .z3 { width: 535px; position: relative; flex-shrink: 0; align-self: stretch; min-width: 0; }
-        /* r2 右侧：2×5 栅格铺满 427×362，避免出现 85×5≠427 的视觉缝隙 */
+        /* r2 Right side: 2×5 grid filling 427×362 to avoid visual gaps where 85×5≠427 */
         .mid-right {
             width: 362px;
             height: 100%;
@@ -96,7 +96,7 @@
             width: 100%;
             min-height: 0;
             max-height: 100%;
-            /* 在中间 3 区内略放大仪表（父级 overflow:hidden 裁掉外缘） */
+            /* Slightly enlarge the gauge in the center Zone 3 (parent overflow:hidden crops the outer edges) */
             transform: scale(1.12);
             transform-origin: center center;
             margin-top: -22px;
@@ -104,12 +104,12 @@
         .z4 { width: 127px; font-weight: bold; font-size: 28px;} .z5 { width: 171px; } .z6 { width: 259px; } .z7 { width: 105px; } .z21{ width: 181px; } .z22{ width: 181px; }
         .z23{ width: 334px; justify-content: flex-start; align-items: flex-end; padding: 0 0 36px 10px; } .z24{ width: 320px; align-items: flex-start; padding: 25px; } .z25{ width: 370px; padding: 15px; align-items: flex-start; font-size: 20px; line-height: 1.4;} .z13 { width: 181px !important; } .z14 { width: 181px !important; } 
 
-        /* 内部组件 */
+        /* Internal Components */
         .dist-bar { position: absolute; right: -12px; bottom: 0; width: 10px; background-color: rgb(45, 144, 51); transition: height 0.2s; }
         @keyframes blink { 50% { opacity: 0; } }
         .blinking { animation: blink 1s step-start infinite; }
 
-        /* 控制台样式 */
+        /* Console Styles */
         .control-panel {
             width: 480px; background-color: #222; border-radius: 8px; padding: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column;
@@ -127,7 +127,7 @@
         .slider-row input { width: 100%; cursor: pointer;}
         button { background: #444; color: white; border: 1px solid #666; padding: 8px; border-radius: 4px; cursor: pointer; }
 
-        /* 嵌入 metro-simulator：仅 DMI，隐藏调试面板 */
+        /* Embedded metro-simulator: DMI only, hide debugging panel */
         html.vobc-embed-root, body.vobc-embed {
             height: 100%;
             margin: 0;
@@ -163,12 +163,12 @@
         <div class="row r1">
             <div class="zone z1" id="z1-eb"></div>
             <div class="zone z8">
-                <span class="label" style="font-family: SimSun, 'Songti SC', serif; font-weight: bold;">终点站: <span class="c-blue" id="z8-txt" style="margin-left:10px; font-family: SimSun, 'Songti SC', serif; font-weight: bold;">
+                <span class="label" style="font-family: SimSun, 'Songti SC', serif; font-weight: bold;">Terminus: <span class="c-blue" id="z8-txt" style="margin-left:10px; font-family: SimSun, 'Songti SC', serif; font-weight: bold;">
 
                 </span>
                 </span>
             </div>
-            <div class="zone z9"><span class="label" style="font-family: SimSun, 'Songti SC', serif; font-weight: bold;">下一站: <span class="c-blue" id="z9-txt" style="margin-left:10px; font-family: SimSun, 'Songti SC', serif; font-weight: bold;"></span></span></div>
+            <div class="zone z9"><span class="label" style="font-family: SimSun, 'Songti SC', serif; font-weight: bold;">Next Station: <span class="c-blue" id="z9-txt" style="margin-left:10px; font-family: SimSun, 'Songti SC', serif; font-weight: bold;"></span></span></div>
             <div class="zone z10"><span class="val" id="z10-txt" style="text-align:left; padding-left: 20px;"></span></div>
         </div>
 
@@ -205,7 +205,7 @@
                             <polygon id="ptr-tri" points="267,55 251,240 283,240" fill="white" />
                             <circle id="ptr-circle" cx="267" cy="240" r="50" fill="rgb(0, 12, 25)" stroke="white" stroke-width="5" />
                         </g>
-                        <!-- 推荐速度标记须在指针之上绘制，嵌入运行时易被白色指针圆盘遮挡 -->
+                        <!-- Recommended speed marker must be drawn above the needle, easily blocked by the white needle disc when embedded -->
                         <g id="tgt-tri"><polygon points="267,50 255,30 279,30" fill="rgb(255,242,0)" /></g>
                         <text x="267" y="258" fill="white" font-size="58" font-weight="bold" text-anchor="middle" id="z3-spd">0</text>
                     </svg>
@@ -392,122 +392,122 @@
     </div>
 
     <div class="control-panel" id="mock-panel">
-        <h2>DMI 25区 打桩调试器</h2>
+        <h2>DMI 25-Zone Debugging Panel</h2>
         <div class="ctrl-group">
-            <h3>速度/距离 (Z2, Z3)</h3>
-            <div class="slider-row"><div><span>目标距离: <span id="v-dist">500</span>m</span></div><input type="range" id="c-z2" min="0" max="9999" step="1" value="500"></div>
+            <h3>Speed / Distance (Z2, Z3)</h3>
+            <div class="slider-row"><div><span>Target Distance: <span id="v-dist">500</span>m</span></div><input type="range" id="c-z2" min="0" max="9999" step="1" value="500"></div>
             <div class="slider-row">
-                <div><span style="color:white">目标速度: <span id="v-z2-tgt">50.0</span> km/h</span></div>
+                <div><span style="color:white">Target Speed: <span id="v-z2-tgt">50.0</span> km/h</span></div>
                 <input type="range" id="c-z2-tgt" min="0" max="110" step="0.1" value="50">
             </div>
-            <div class="slider-row"><div><span>实际速度: <span id="v-spd">0.0</span> km/h</span></div><input type="range" id="c-z3-spd" min="0" max="110" step="0.1" value="0"></div>
-            <div class="slider-row" id="mock-row-recommend"><div><span style="color:rgb(255,242,0)">推荐: <span id="v-tgt">75.0</span> km/h</span></div><input type="range" id="c-z3-tgt" min="0" max="110" step="0.1" value="75"></div>
+            <div class="slider-row"><div><span>Actual Speed: <span id="v-spd">0.0</span> km/h</span></div><input type="range" id="c-z3-spd" min="0" max="110" step="0.1" value="0"></div>
+            <div class="slider-row" id="mock-row-recommend"><div><span style="color:rgb(255,242,0)">Recommended: <span id="v-tgt">75.0</span> km/h</span></div><input type="range" id="c-z3-tgt" min="0" max="110" step="0.1" value="75"></div>
             <div class="slider-row"><div><span style="color:rgb(189,0,0)">EB: <span id="v-eb">80.0</span> km/h</span></div><input type="range" id="c-z3-eb" min="0" max="110" step="0.1" value="80"></div>
             <input type="hidden" id="c-hide-recommend" value="0">
         </div>
 
         <div class="ctrl-group">
-            <h3>独立区段注入</h3>
+            <h3>Independent Zone Injection</h3>
             <div class="ctrl-grid">
-                <div class="ctrl-item"><label>1区 报警</label>
+                <div class="ctrl-item"><label>Zone 1 Alarm</label>
                     <select id="c-z1">
-                        <option value="none">1: 初始状态 (黑屏)</option>
-                        <option value="orange">2: 超过推荐速度 (橙)</option>
-                        <option value="red">3: 输出紧急制动 (红)</option>
+                        <option value="none">1: Initial State (Blank)</option>
+                        <option value="orange">2: Over Recommended Speed (Orange)</option>
+                        <option value="red">3: Emergency Brake Output (Red)</option>
                     </select>
                 </div>
-                <div class="ctrl-item"><label>4区 牵引</label>
+                <div class="ctrl-item"><label>Zone 4 Traction</label>
                     <select id="c-z4">
-                        <option value="none">1: 初始 (黑屏)</option>
-                        <option value="traction">2: 牵引状态 (M)</option>
-                        <option value="coasting">3: 惰行状态</option>
-                        <option value="braking" selected>4: 制动状态 (B)</option>
+                        <option value="none">1: Initial (Blank)</option>
+                        <option value="traction">2: Traction State (M)</option>
+                        <option value="coasting">3: Coasting State</option>
+                        <option value="braking" selected>4: Brake State (B)</option>
                     </select>
                 </div>
-                <div class="ctrl-item"><label>5区 模式</label>
+                <div class="ctrl-item"><label>Zone 5 Mode</label>
                     <select id="c-z5">
-                        <option value="">1: 初始状态</option>
-                        <option value="RM">2: RM 模式</option>
-                        <option value="CM-I">3: 点式运行控制级别 CM 模式</option>
-                        <option value="CM-C">4: CBTC 运行控制级别 CM 模式</option>
-                        <option value="AM-I">5: 点式运行控制级别 AM 模式</option>
-                        <option value="AM-C" selected>6: CBTC 运行控制级别 AM 模式</option>
-                        <option value="FAM-C">7: CBTC 运行控制级别 FAM 模式</option>
+                        <option value="">1: Initial State</option>
+                        <option value="RM">2: RM Mode</option>
+                        <option value="CM-I">3: Intermittent (ITC) Level CM Mode</option>
+                        <option value="CM-C">4: Continuous (CBTC) Level CM Mode</option>
+                        <option value="AM-I">5: Intermittent (ITC) Level AM Mode</option>
+                        <option value="AM-C" selected>6: Continuous (CBTC) Level AM Mode</option>
+                        <option value="FAM-C">7: Continuous (CBTC) Level FAM Mode</option>
                     </select>
                 </div>
-                <div class="ctrl-item"><label>6区 完整</label><select id="c-z6"><option value="1">正常 (绿)</option><option value="2">丢失 (红)</option></select></div>
-                <div class="ctrl-item"><label>7区 头尾</label><select id="c-z7"><option value="1">本端激活/对端待机</option><option value="2">本端激活/对端故障</option><option value="3">本端故障/对端激活</option></select></div>
-                <div class="ctrl-item"><label>8区 终点</label><input type="text" id="c-z8" value="上海火车站"></div>
-                <div class="ctrl-item"><label>9区 下站</label><input type="text" id="c-z9" value="人民广场"></div>
-                <div class="ctrl-item"><label>10区 车次</label><input type="text" id="c-z10" value="T0291"></div>
-                <div class="ctrl-item"><label>11区 扣车</label>
+                <div class="ctrl-item"><label>Zone 6 Integrity</label><select id="c-z6"><option value="1">Normal (Green)</option><option value="2">Lost (Red)</option></select></div>
+                <div class="ctrl-item"><label>Zone 7 Cab Active</label><select id="c-z7"><option value="1">This Cab Active / Remote Cab Standby</option><option value="2">This Cab Active / Remote Cab Fault</option><option value="3">This Cab Fault / Remote Cab Active</option></select></div>
+                <div class="ctrl-item"><label>Zone 8 Terminus</label><input type="text" id="c-z8" value="Shanghai Railway Station"></div>
+                <div class="ctrl-item"><label>Zone 9 Next Station</label><input type="text" id="c-z9" value="People's Square"></div>
+                <div class="ctrl-item"><label>Zone 10 Train ID</label><input type="text" id="c-z10" value="T0291"></div>
+                <div class="ctrl-item"><label>Zone 11 Hold/Skip</label>
                     <select id="c-z11">
-                        <option value="none">1: 初始 (隐藏)</option>
-                        <option value="skip">2: 跳停</option>
-                        <option value="hold">3: 扣车</option>
+                        <option value="none">1: Initial (Hidden)</option>
+                        <option value="skip">2: Station Skip</option>
+                        <option value="hold">3: Train Hold</option>
                     </select>
                 </div>
-                <div class="ctrl-item"><label>13区 驾驶模式</label>
+                <div class="ctrl-item"><label>Zone 13 Driving Mode</label>
                     <select id="c-z13">
-                        <option value="">1: 初始状态</option>
-                        <option value="AM" selected>2: AM 模式</option>
-                        <option value="CM">3: CM 模式</option>
-                        <option value="RM">4: RM 模式</option>
-                        <option value="FAM">5: FAM 模式</option>
+                        <option value="">1: Initial State</option>
+                        <option value="AM" selected>2: AM Mode</option>
+                        <option value="CM">3: CM Mode</option>
+                        <option value="RM">4: RM Mode</option>
+                        <option value="FAM">5: FAM Mode</option>
                     </select>
                 </div>
-                <div class="ctrl-item"><label>14区 控制级别</label>
+                <div class="ctrl-item"><label>Zone 14 Control Level</label>
                     <select id="c-z14">
-                        <option value="">1: 初始状态</option>
-                        <option value="ILC">2: 联锁运行控制级别</option>
-                        <option value="ITC">3: 点式运行控制级别</option>
-                        <option value="CBTC" selected>4: CBTC 运行控制级别</option>
+                        <option value="">1: Initial State</option>
+                        <option value="ILC">2: Interlocking (ILC) Level</option>
+                        <option value="ITC">3: Intermittent (ITC) Level</option>
+                        <option value="CBTC" selected>4: Continuous (CBTC) Level</option>
                     </select>
                 </div>
-                <div class="ctrl-item"><label>15区 折返</label><select id="c-z15"><option value="none">隐藏</option><option value="blink">闪烁</option><option value="solid">常亮</option></select></div>
-                <div class="ctrl-item"><label>16区 停车精度</label>
+                <div class="ctrl-item"><label>Zone 15 Reversing</label><select id="c-z15"><option value="none">Hidden</option><option value="blink">Flashing</option><option value="solid">Solid</option></select></div>
+                <div class="ctrl-item"><label>Zone 16 Stop Precision</label>
                     <select id="c-z16">
-                        <option value="none">1: 初始 (隐藏)</option>
-                        <option value="platform">2: 进入站台但未进入停车范围</option>
-                        <option value="stop-range">3: 进入站台但未进入准确停车范围</option>
-                        <option value="precision">4: 进入站台且进入停车精度范围</option>
+                        <option value="none">1: Initial (Hidden)</option>
+                        <option value="platform">2: In station, outside stopping window</option>
+                        <option value="stop-range">3: In station, outside accurate window</option>
+                        <option value="precision">4: In station, within stopping precision window</option>
                     </select>
                 </div>
-                <div class="ctrl-item" style="grid-column: span 2;"><label>17区 车门</label><select id="c-z17" style="color:rgb(255,242,0);font-weight:bold;"><option value="1">1: 初始</option><option value="2">2: 允许双开</option><option value="3">3: 允许左开</option><option value="4">4: 允许右开</option><option value="5">5: 左开状态</option><option value="6">6: 右开状态</option><option value="7">7: 双开状态</option><option value="8">8: 非法打开</option></select></div>
-                <div class="ctrl-item"><label>18区 发车</label>
+                <div class="ctrl-item" style="grid-column: span 2;"><label>Zone 17 Train Doors</label><select id="c-z17" style="color:rgb(255,242,0);font-weight:bold;"><option value="1">1: Initial</option><option value="2">2: Enable Both Sides</option><option value="3">3: Enable Left Side</option><option value="4">4: Enable Right Side</option><option value="5">5: Left Doors Open</option><option value="6">6: Right Doors Open</option><option value="7">7: Both Sides Open</option><option value="8">8: Unsanctioned Open</option></select></div>
+                <div class="ctrl-item"><label>Zone 18 Departure</label>
                     <select id="c-z18">
-                        <option value="none">1: 初始 (隐藏)</option>
-                        <option value="close">2: 允许关门</option>
-                        <option value="depart">3: 建议发车（晚点预警）</option>
+                        <option value="none">1: Initial (Hidden)</option>
+                        <option value="close">2: Doors Closing Permitted</option>
+                        <option value="depart">3: Departure Suggested (Delay Warning)</option>
                     </select>
                 </div>
-                <div class="ctrl-item"><label>19区 门模式</label><input type="text" id="c-z19" value="" maxlength="12" placeholder="空=未选定"></div>
-                <div class="ctrl-item"><label>20区 空转/站台门</label>
+                <div class="ctrl-item"><label>Zone 19 Door Mode</label><input type="text" id="c-z19" value="" maxlength="12" placeholder="Blank = Unselected"></div>
+                <div class="ctrl-item"><label>Zone 20 Slip-Slide / PSD</label>
                     <select id="c-z20">
-                        <option value="none">1: 初始 (隐藏)</option>
-                        <option value="slip">2: 车轮空转或打滑</option>
-                        <option value="psd">3: 站台门未关闭</option>
-                        <option value="both">4: 两者同时 (验证优先级)</option>
+                        <option value="none">1: Initial (Hidden)</option>
+                        <option value="slip">2: Wheel Slip / Slide</option>
+                        <option value="psd">3: Platform Screen Doors Open</option>
+                        <option value="both">4: Both Active (Verify Priority)</option>
                     </select>
                 </div>
-                <div class="ctrl-item"><label>21区 故障</label>
+                <div class="ctrl-item"><label>Zone 21 Faults</label>
                     <select id="c-z21">
-                        <option value="none">1: 初始 (隐藏)</option>
-                        <option value="atp">2: 车载 ATP 设备故障</option>
-                        <option value="ato">3: ATO 设备功能失效</option>
-                        <option value="radio">4: 无线通信故障</option>
+                        <option value="none">1: Initial (Hidden)</option>
+                        <option value="atp">2: Onboard ATP Equipment Fault</option>
+                        <option value="ato">3: ATO Equipment Failure</option>
+                        <option value="radio">4: Radio Communication Fault</option>
                     </select>
                 </div>
-                <div class="ctrl-item"><label>22区 基地转换</label>
+                <div class="ctrl-item"><label>Zone 22 Depot Transition</label>
                     <select id="c-z22">
-                        <option value="none">1: 初始 (隐藏)</option>
-                        <option value="depot">2: 列车进入车辆基地</option>
-                        <option value="track">3: 列车进入库线</option>
-                        <option value="lost">4: 丢失定位或非自动化区域</option>
+                        <option value="none">1: Initial (Hidden)</option>
+                        <option value="depot">2: Train Entering Depot</option>
+                        <option value="track">3: Train Entering Stabling Track</option>
+                        <option value="lost">4: Position Lost / Non-Automated Area</option>
                     </select>
                 </div>
-                <div class="ctrl-item"><label>23区 时钟</label><input type="text" id="c-z23" value=""></div>
-                <div class="ctrl-item" style="grid-column: span 2;"><label>25区 消息</label><input type="text" id="c-z25" value=""></div>
+                <div class="ctrl-item"><label>Zone 23 Clock</label><input type="text" id="c-z23" value=""></div>
+                <div class="ctrl-item" style="grid-column: span 2;"><label>Zone 25 Messages</label><input type="text" id="c-z25" value=""></div>
             </div>
         </div>
     </div>
@@ -553,12 +553,12 @@
         if (!Number.isFinite(n)) return lo;
         return Math.max(lo, Math.min(hi, n));
     }
-    /** 目标距离：整数 m，0～9999（光带刻度仍以 ≤750m 的对数映射饱和） */
+    /** Target distance: integer m, 0-9999 (lightband mapping saturates logarithmically at <=750m) */
     function clampDistM(n) {
         const x = clampSpd(parseFloat(n), 0, 9999);
         return Math.round(x);
     }
-    /** 速度类：0.1 km/h 分度 */
+    /** Speed types: 0.1 km/h increments */
     function clampKmh01(n) {
         const x = clampSpd(parseFloat(n), 0, 110);
         return Math.round(x * 10) / 10;
@@ -605,20 +605,20 @@
         }
         document.getElementById('v-eb').textContent = z3e.toFixed(1);
 
-        // 1区 超速报警及紧急制动显示逻辑
+        // Zone 1 overspeed alarm and emergency brake display logic
         let z1Color = 'transparent'; 
         if (z1 === 'orange') {
-            z1Color = 'rgb(234, 145, 0)';       // 手动橙色
+            z1Color = 'rgb(234, 145, 0)';       // Manual orange
         } else if (z1 === 'red') {
-            z1Color = 'rgb(189, 0, 0)';         // 手动红色
+            z1Color = 'rgb(189, 0, 0)';         // Manual red
         }
         document.getElementById('z1-eb').style.backgroundColor = z1Color;
-        // 2区上方大字：目标速度 — DMI 仍为 1 km/h 显示
+        // Zone 2 upper text: target speed — DMI displays in 1 km/h increments
         document.getElementById('z2-tgt').textContent = String(Math.round(z2t));
         if (z2 >= 9000) {
-            document.getElementById('z2-dist').innerHTML = '<span style="font-weight:bold;">—</span>米';
+            document.getElementById('z2-dist').innerHTML = '<span style="font-weight:bold;">—</span> m';
         } else {
-            document.getElementById('z2-dist').innerHTML = `<span style="font-weight:bold;">${z2}</span>米`;
+            document.getElementById('z2-dist').innerHTML = `<span style="font-weight:bold;">${z2}</span> m`;
         }
         
         const z2BandPx = 308;
@@ -640,7 +640,7 @@
             document.getElementById('z2-bar').style.backgroundColor = barColor;
         }
 
-        // 3区中央数字：实际速度 — DMI 仍为 1 km/h 显示
+        // Zone 3 center number: actual speed — DMI displays in 1 km/h increments
         document.getElementById('z3-spd').textContent = String(Math.round(z3s));
         document.getElementById('pointer-group').setAttribute('transform', `rotate(${speedToAngle(z3s)} 267 240)`);
         const tgtTri = document.getElementById('tgt-tri');
@@ -656,7 +656,7 @@
         document.getElementById('eb-tri').setAttribute('transform', `rotate(${speedToAngle(z3e)} 267 240)`);
         document.getElementById('red-arc').setAttribute('d', describeArc(267, 240, 190, speedToAngle(z3e), speedToAngle(110)));
 
-        // 4区 牵引/制动状态显示逻辑
+        // Zone 4 traction/brake status display logic
         document.getElementById('z4-traction').style.display = (z4 === 'traction') ? 'block' : 'none';
         document.getElementById('z4-coasting').style.display = (z4 === 'coasting') ? 'block' : 'none';
         document.getElementById('z4-braking').style.display = (z4 === 'braking') ? 'block' : 'none';
@@ -669,7 +669,7 @@
         else if (z7==='2'){ z7T.setAttribute('fill',cG); z7B.setAttribute('fill',cR); }
         else { z7T.setAttribute('fill',cR); z7B.setAttribute('fill',cG); }
 
-        // 11区 跳停/扣车状态显示逻辑
+        // Zone 11 skip/hold status display logic
         if (document.getElementById('z11-skip')) {
             document.getElementById('z11-skip').style.display = (z11 === 'skip') ? 'block' : 'none';
             document.getElementById('z11-hold').style.display = (z11 === 'hold') ? 'block' : 'none';
@@ -722,7 +722,7 @@
             case '8': dl.setAttribute('fill', yC); dr.setAttribute('fill', yC); break;
         }
 
-        // 18区 发车信息显示逻辑
+        // Zone 18 departure info display logic
         if (document.getElementById('z18-close')) {
             document.getElementById('z18-close').style.display = (z18 === 'close') ? 'block' : 'none';
             document.getElementById('z18-depart').style.display = (z18 === 'depart') ? 'block' : 'none';
@@ -732,7 +732,7 @@
         if (document.getElementById('z20-slip')) {
             const showSlip = z20 === 'slip' || z20 === 'both';
             const showPsd = z20 === 'psd';
-            // 规范要求：空转/打滑优先级高于站台门未关闭
+            // Specification requirement: Wheel slip/slide has higher priority than unclosed platform doors
             document.getElementById('z20-slip').style.display = showSlip ? 'block' : 'none';
             document.getElementById('z20-psd').style.display = (!showSlip && showPsd) ? 'block' : 'none';
         }
@@ -763,7 +763,7 @@
     document.getElementById('mock-panel').addEventListener('input', syncAllZones);
     document.getElementById('mock-panel').addEventListener('change', syncAllZones);
 
-    /* metro-simulator 嵌入：由父页面下发控件值并刷新 DMI */
+    /* metro-simulator embed: control values sent by parent page to refresh DMI */
     (function embedMetro() {
         const p = new URLSearchParams(location.search);
         if (p.get('embed') === '1') {
@@ -785,7 +785,7 @@
             const scale = () => {
                 const iw = window.innerWidth || DMI_NAT_W;
                 const ih = window.innerHeight || DMI_NAT_H;
-                /** iframe 视口与 DMI 同为 4:3（父页 .mmi-dmi-slot）时，contain 可无黑边、无裁切 */
+                /** When iframe viewport and DMI are both 4:3 (parent page .mmi-dmi-slot), contain eliminates black bars and cropping */
                 const s = Math.min(iw / DMI_NAT_W, ih / DMI_NAT_H);
                 const inv = 1 - s;
                 if (wrap) {

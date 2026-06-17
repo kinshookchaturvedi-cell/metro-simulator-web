@@ -1,13 +1,14 @@
 /**
- * 牵引 / 再生电制动电流示意模型（并联逆变器等效）。
- * 常用制动以大份额电制动（负电流）为主；快速/紧急制动以空气制动为主，负电流仅占小份额；
- * 低速再生能力减弱，更符合城轨逆变器特性。
+ * Traction / Regenerative dynamic braking current illustrative model (equivalent parallel inverters).
+ * Service braking is primarily dominated by a large share of electric braking (negative current);
+ * Rapid / Emergency braking primarily relies on pneumatic braking, with negative current taking only a small share;
+ * Regenerative capability fades at low speeds, closely mirroring urban rail transit inverter characteristics.
  */
 import { CONST } from "../config/constants.js";
 import { clamp, ms2kmh } from "../lib/math.js";
 import { train } from "./vehicle-state.js";
 
-/** 车速相关的再生制动可用系数 0～1 */
+/** Vehicle speed-dependent regenerative braking availability factor (0 to 1) */
 function regenAvailBySpeed(vKmh) {
   if (vKmh < CONST.REGEN_KNEE_KMH_LOW) {
     const t = vKmh / Math.max(CONST.REGEN_KNEE_KMH_LOW, 0.1);
@@ -28,8 +29,8 @@ function elecBrakeShareForDemand(cmdAcc) {
 }
 
 /**
- * @param {number} dt 步长 (s)
- * @param {number} cmdAcc 本拍已滤波后的纵向需求加速度（m/s²）
+ * @param {number} dt Time step (s)
+ * @param {number} cmdAcc Filtered longitudinal demand acceleration for the current execution cycle (m/s²)
  */
 export function updateMotorCurrentModel(dt, cmdAcc) {
   const iRef = CONST.MOTOR_I_REF_A;
